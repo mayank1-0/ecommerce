@@ -11,8 +11,9 @@ const ProductHomePageRow = ({ category }) => {
   useEffect(() => {
     async function fetchHomePageRowData() {
       try {
+        const apiUrl = import.meta.env.VITE_LIVE_URL
         const response = await axios.get(
-          `http://localhost:3000/product/fetch-products/${category}`
+          `${apiUrl}/product/fetch-products/${category}`
         )
         if (response.data.success) {
           setError('')

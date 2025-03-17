@@ -11,8 +11,8 @@ const ResetPassword = () => {
     e.preventDefault();
     setError('');
     try {
-      
-      const response = await axios.put('http://localhost:3000/auth/reset-password',{token, newPassword});
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.put(`${apiUrl}/auth/reset-password`,{token, newPassword});
       if (response.data.success) {
         setError('');
         alert('Password updated successfully')    

@@ -11,7 +11,8 @@ const ForgotPassword = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:3000/auth/send-reset-password-link', {resetPasswordEmail});
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.post(`${apiUrl}/auth/send-reset-password-link`, {resetPasswordEmail});
       if (response.data.success) {
         setError('');
         alert(`Reset password link sent to your email. Kindly check`); 

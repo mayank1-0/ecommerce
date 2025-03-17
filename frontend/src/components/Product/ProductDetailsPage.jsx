@@ -67,8 +67,9 @@ const ProductDetailsPage = () => {
   useEffect(() => {
     const fetchSelectedAndRelatedProducts = async () => {
       try {
+        const apiUrl = import.meta.env.VITE_LIVE_URL
         const response = await axios.get(
-          `http://localhost:3000/product/fetch-selected-product-and-related-products/${productId}`
+          `${apiUrl}/product/fetch-selected-product-and-related-products/${productId}`
         )
         if (response.data.success && response.data.relatedProducts) {
           setProductDetailsData(response.data.selectedProduct)

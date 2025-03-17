@@ -13,7 +13,8 @@ const Signup = () => {
     e.preventDefault();
     setError('');
     try {
-      const response = await axios.post('http://localhost:3000/auth/signup', {fullName, email, password})
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.post(`${apiUrl}/auth/signup`, {fullName, email, password})
       if (response.data.success) {
         setError('');
         alert(`Signup successful`);
