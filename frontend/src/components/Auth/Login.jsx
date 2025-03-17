@@ -3,25 +3,29 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  async function handleSubmit(e){
-    e.preventDefault();
-    setError('');
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
     try {
       const apiUrl = import.meta.env.VITE_LIVE_URL
-      const response = await axios.post(`${apiUrl}`, {email, password})
+      const response = await axios.post(`${apiUrl}/auth/login`, {
+        email,
+        password,
+      })
       if (response.data.success) {
-        setError('');
-        alert(`Login successful`);
+        setError('')
+        alert(`Login successful`)
       } else {
-        setError(response.data.message || 'Login failed');
+        setError(response.data.message || 'Login failed')
       }
     } catch (error) {
-      setError(error.response?.data?.message || 'An error occured. Please try again');
+      setError(
+        error.response?.data?.message || 'An error occured. Please try again'
+      )
     }
   }
 
@@ -33,13 +37,15 @@ const Login = () => {
             <div className="card-header text-center">
               <h3>Login</h3>
             </div>
-            {error && <p style={{ color: 'red', marginLeft: '200px' }}>{error}</p>}
+            {error && (
+              <p style={{ color: 'red', marginLeft: '200px' }}>{error}</p>
+            )}
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label for="email">Email address</label>
                   <input
-                    onChange={(e)=>setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     className="form-control"
                     id="email"
@@ -51,7 +57,7 @@ const Login = () => {
                 <div className="form-group">
                   <label for="password">Password</label>
                   <input
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     type="password"
                     className="form-control"
                     id="password"
@@ -67,11 +73,9 @@ const Login = () => {
             <div className="card-footer text-center">
               <small>&copy; 2025 Your Company</small>
               <br />
-              <Link to="/signup" >New user? Sign up here</Link>
+              <Link to="/signup">New user? Sign up here</Link>
               <br />
-              <Link to="/forgot-password">
-                Forgot password?
-              </Link>
+              <Link to="/forgot-password">Forgot password?</Link>
             </div>
           </div>
         </div>
