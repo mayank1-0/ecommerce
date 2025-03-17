@@ -1,6 +1,6 @@
 import './css/productHomePage.css'
 import Navbar from './common/Navbar'
-import ProductHomePageRow from './productRow/productHomePageRow'
+import ProductHomePageRow from './productRow/ProductHomePageRow'
 import Footer from './common/Footer'
 import { useParams } from 'react-router-dom'
 
