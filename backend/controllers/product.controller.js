@@ -46,8 +46,23 @@ const fetchSelectedAndRelatedProducts = async (req, res) => {
 const fetchProducts = async (req, res) => {
     try {
         const which = req.params.all_or_category;
-        if( which === 'popular-items'){
-            const products = await Product.find({category: "Popular_Item"});
+        let categoryName;
+        switch (which) {
+            case 'popular-items':
+                categoryName = 'Popular_Item';
+                break;
+            case 'fancy-products':
+                categoryName = 'Fancy_Product';
+                break;
+            case 'special-items':
+                categoryName = 'Special_Item';
+                break;
+            case 'sale-items':
+                categoryName = 'Sale_Item';
+                break;
+        }
+        if( categoryName ){
+            const products = await Product.find({category: categoryName});
             if(!products) return res.status(404).send({success: false, message: 'No products of the selected category exists in the database', products: null});
             return res.status(200).send({success: true, message:`Products of the selected category fetched successfully`, products});
         }

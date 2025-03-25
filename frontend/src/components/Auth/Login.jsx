@@ -1,32 +1,17 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../../AuthContext'
 
 const Login = () => {
+  const navigate = useNavigate()
+  const { login, error } = useAuth();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError('')
-    try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
-      const response = await axios.post(`${apiUrl}/auth/login`, {
-        email,
-        password,
-      })
-      if (response.data.success) {
-        setError('')
-        alert(`Login successful`)
-      } else {
-        setError(response.data.message || 'Login failed')
-      }
-    } catch (error) {
-      setError(
-        error.response?.data?.message || 'An error occured. Please try again'
-      )
-    }
+    await login(email, password)
+    navigate('/')
   }
 
   return (
@@ -43,7 +28,7 @@ const Login = () => {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label for="email">Email address</label>
+                  <label htmlFor="email">Email address</label>
                   <input
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
@@ -55,7 +40,7 @@ const Login = () => {
                   />
                 </div>
                 <div className="form-group">
-                  <label for="password">Password</label>
+                  <label htmlFor="password">Password</label>
                   <input
                     onChange={(e) => setPassword(e.target.value)}
                     type="password"

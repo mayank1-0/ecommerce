@@ -1,17 +1,34 @@
-const express = require('express');
-const auth = require('./routes/auth');
-const product = require('./routes/product');
-const cors = require('cors');
-const app = express();
+const express = require('express')
+const auth = require('./routes/auth')
+const product = require('./routes/product')
+const cors = require('cors')
+const cookieParser = require('cookie-parser')
+const session = require('express-session');
+const app = express()
 
-app.use(cors());
-app.use(express.json());    // req.body req.json idhar udhar krne ke liye
-app.use(express.static('public'));  // This will make all files inside the public folder accessible via URLs starting with /
-app.use('/auth', auth);
-app.use('/product', product);
+app.use(
+	session({
+		resave: true,
+		saveUninitialized: true,
+		secret: "XCR3rsasa%RDHHH",
+		cookie: {},
+	})
+);
 
-app.get('/', (req,res)=> {
-    res.send('App is running');
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // Allow requests from this origin
+    credentials: true, // Allow credentials (cookies)
+  })
+)
+app.use(express.json()) // req.body req.json idhar udhar krne ke liye
+app.use(express.static('public')) // This will make all files inside the public folder accessible via URLs starting with /
+app.use(cookieParser())
+app.use('/auth', auth)
+app.use('/product', product)
+
+app.get('/', (req, res) => {
+  res.send('App is running')
 })
 
-module.exports = app;
+module.exports = app

@@ -7,20 +7,39 @@ import ResetPassword from './components/Auth/Resetpassword'
 // Product components
 import ProductHomePage from './components/Product/ProductHomePage'
 import ProductDetailsPage from './components/Product/ProductDetailsPage'
+// Checkout component
+import CheckoutPage from './components/Checkout/CheckoutPage'
+import { CartProvider } from './CartContext'
+import { AuthProvider } from './AuthContext'
 
 function App() {
   return (
     <div>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route path="/products-home-page/:category?" element={<ProductHomePage />} />
-          <Route path="/product-details-page/:productId" element={<ProductDetailsPage />} />
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <CartProvider>
+          <Router>
+            <Routes>
+              {/* Home page, product details page and checkout page */}
+              <Route path="/:category?" element={<ProductHomePage />} />
+              <Route
+                path="/product-details-page/:productId"
+                element={<ProductDetailsPage />}
+              />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              {/* ------------------------------------ */}
+              {/* Auth functionality */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
+              />
+              {/* ------------------------------------ */}
+            </Routes>
+          </Router>
+        </CartProvider>
+      </AuthProvider>
     </div>
   )
 }

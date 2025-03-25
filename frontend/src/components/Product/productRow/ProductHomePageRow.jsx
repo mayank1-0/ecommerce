@@ -11,7 +11,8 @@ const ProductHomePageRow = ({ category }) => {
   useEffect(() => {
     async function fetchHomePageRowData() {
       try {
-        const apiUrl = import.meta.env.VITE_LIVE_URL
+        // const apiUrl = import.meta.env.VITE_LIVE_URL
+        const apiUrl = import.meta.env.VITE_LOCAL_URL
         const response = await axios.get(
           `${apiUrl}/product/fetch-products/${category}`
         )
@@ -44,7 +45,7 @@ const ProductHomePageRow = ({ category }) => {
                   productId={product._id}
                   productImage={product.image}
                   productName={product.productName}
-                  productPrice={`$${product.price}`}
+                  productPrice={`${product.price}`}
                 />
               )
             })

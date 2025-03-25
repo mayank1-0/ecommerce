@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Signup = () => {
-
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,11 +13,13 @@ const Signup = () => {
     e.preventDefault();
     setError('');
     try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      // const apiUrl = import.meta.env.VITE_LIVE_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.post(`${apiUrl}/auth/signup`, {fullName, email, password})
       if (response.data.success) {
         setError('');
         alert(`Signup successful`);
+        navigate('/');
       } else {
         setError(response.data.message || 'Signup failed');
       }

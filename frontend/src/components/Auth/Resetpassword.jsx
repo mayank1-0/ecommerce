@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { useParams } from 'react-router-dom' 
+import { useNavigate, useParams } from 'react-router-dom' 
 
 const ResetPassword = () => {
+  const navigate = useNavigate();
   const { token } = useParams();
   const [ newPassword, setNewPassword ] = useState('');
   const [ error, setError ] = useState('');
@@ -11,11 +12,13 @@ const ResetPassword = () => {
     e.preventDefault();
     setError('');
     try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      // const apiUrl = import.meta.env.VITE_LIVE_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.put(`${apiUrl}/auth/reset-password`,{token, newPassword});
       if (response.data.success) {
         setError('');
-        alert('Password updated successfully')    
+        alert('Password updated successfully')
+        navigate('/');    
       } else {
         setError(response.data.message)
       }

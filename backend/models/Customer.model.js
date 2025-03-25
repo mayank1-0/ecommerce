@@ -22,6 +22,11 @@ const customerSchema = new mongoose.Schema({
         select: false,
         trim: true
     },
+    shippingAddress: {
+        type: String,
+        maxLength: [200, "Shipping address' length can't be more than 200 characters"],
+        trim: true
+    },
     role: {
         type: String,
         enum: ['Admin', 'Customer'],

@@ -46,14 +46,14 @@ const signup = async (req, res) => {
 }
 
 const login = async (req, res) => {
-  try {
+  try {    
     const { email, password } = req.body
     if (!email || !password)
       return res.status(400).send({
         success: false,
         message: 'Please enter both email and password',
       })
-    const customer = await Customer.findOne({ email }).select('password')
+    const customer = await Customer.findOne({ email }).select('fullName password');
     if (!customer)
       return res
         .status(400)
@@ -64,13 +64,20 @@ const login = async (req, res) => {
         .status(400)
         .send({ success: false, message: 'Invalid credentials' })
     const jwtToken = await jwt.sign(
-      { id: customer._id },
+      {
+        id: customer._id,
+        isActive: true
+      },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE }
     )
+    let sessionData = req.session;
+    sessionData.user = {};
+    sessionData.token = jwtToken;
+    sessionData.user.email = email;
+    sessionData.user.name = customer.fullName;
     res
-      .status(200)
-      .send({ success: true, message: 'Login successful', token: jwtToken })
+      .status(200).send({ success: true, message: 'Login successful', token: jwtToken, customerName: customer.fullName });
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -158,4 +165,33 @@ const resetPassword = async (req, res) => {
   }
 }
 
-module.exports = { login, signup, resetPasswordLink, resetPassword }
+const logout = async (req, res) => {  
+  try {
+    let sessionData = req.session;
+    const logout = await sessionData.destroy();
+    res.status(200).send({success: true, message: `Logout successful`})
+  } catch (e) {
+    res
+      .status(500)
+      .send({ success: false, error: e, message: "Logout Failed. Please try again" });
+  }
+}
+
+const updateShippingAddress = async (req, res) => {
+  try {
+    const { shippingAddress } = req.body;
+    const userId = req.id;
+    const update = await Customer.findByIdAndUpdate(
+      userId,
+      { shippingAddress },
+      { new: true }
+    )
+    if (update) return res.status(200).send({ success: true, message: `Shipping address for the loggedIn user updated successfully`, data: update })    
+    res.status(404).send({success: false, message: `No customer with the given id found in the database`});
+  } catch (error) {
+    res.status(500).send({success: false, message: "Something went wrong", error});
+  }
+}
+
+
+module.exports = { login, signup, resetPasswordLink, resetPassword, updateShippingAddress, logout }

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const ForgotPassword = () => {
-
   const [ resetPasswordEmail, setResetPasswordEmail ] = useState('');
   const [ error, setError] = useState('')
 
@@ -11,11 +10,12 @@ const ForgotPassword = () => {
     e.preventDefault();
     setError('');
     try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      //const apiUrl = import.meta.env.VITE_LIVE_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.post(`${apiUrl}/auth/send-reset-password-link`, {resetPasswordEmail});
       if (response.data.success) {
         setError('');
-        alert(`Reset password link sent to your email. Kindly check`); 
+        alert(`Reset password link sent to your email. Kindly check`);
       } else {
         setError(response.data.message);
       }

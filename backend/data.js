@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const Product = require('./models/Product.model') // adjust the path if necessary
+const Customer = require('./models/Customer.model');
 require('dotenv').config();
 
 // Array of sample products to insert
@@ -108,13 +109,14 @@ const products = [
 ]
 
 // Function to seed the database
-const seedProducts = async () => {
+const seedProductsAndDeleteCustomers = async () => {
   try {
     // Connect to the MongoDB database
     await mongoose.connect(process.env.MONGODB_URI);
 
     // Delete existing products (optional)
     await Product.deleteMany()
+    await Customer.deleteMany()
 
     // Insert the sample products into the database
     await Product.insertMany(products)
@@ -127,4 +129,4 @@ const seedProducts = async () => {
   }
 }
 
-seedProducts()
+seedProductsAndDeleteCustomers()
