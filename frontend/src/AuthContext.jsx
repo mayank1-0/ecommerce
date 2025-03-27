@@ -41,9 +41,13 @@ export const AuthProvider = ({ children }) => {
       const apiUrl = import.meta.env.VITE_LIVE_URL
       const response = await axios.get(`${apiUrl}/auth/logout`) // Call the logout endpoint
       if (response.data.success) {
+        console.log(`1111`);
         setUser(null)
-        localStorage.removeItem('user') // Clear persisted user data
+        console.log(`2222`);
+        localStorage.removeItem("user") // Clear persisted user data
+        console.log(`3333`);
         delete axios.defaults.headers.common['Authorization']
+        console.log(`4444`);
       } else {
         setError(response.data.message || 'Logout failed')
       }
