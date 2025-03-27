@@ -19,6 +19,6 @@ router.put('/reset-password', resetPassword)
 router.put('/update-shipping-address', auth, updateShippingAddress)
 
 // clear token i.e. logout
-router.post('/logout', logout)
+router.get('/logout', logout)
 
 module.exports = router

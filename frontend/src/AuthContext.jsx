@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       const apiUrl = import.meta.env.VITE_LIVE_URL
-      const response = await axios.post(`${apiUrl}/auth/logout`) // Call the logout endpoint
+      const response = await axios.get(`${apiUrl}/auth/logout`) // Call the logout endpoint
       if (response.data.success) {
         setUser(null)
         localStorage.removeItem('user') // Clear persisted user data
