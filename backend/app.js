@@ -20,7 +20,8 @@ app.use(
   cors({
     origin: 'https://ecommerce-five-phi-40.vercel.app', // Allow requests from this origin
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+	credentials: true
   })
 )
 app.use(express.json()) // req.body req.json idhar udhar krne ke liye
