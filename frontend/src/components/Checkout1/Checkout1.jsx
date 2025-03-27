@@ -1,107 +1,120 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import './css1.css';
-import { useCart } from '../../CartContext';
+import { useState } from 'react'
+import axios from 'axios'
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
+import './css1.css'
+import { useCart } from '../../CartContext'
 
 const CheckoutPage = () => {
-  const { cart, removeFromCart, updateQuantity, totalCart, clearCart } = useCart();
-  const [shippingAddress, setShippingAddress] = useState('');
-  const [error, setError] = useState('');
-  const [paymentStep, setPaymentStep] = useState('address'); // 'address' or 'payment'
+  const { cart, removeFromCart, updateQuantity, totalCart, clearCart } =
+    useCart()
+  const [shippingAddress, setShippingAddress] = useState('')
+  const [error, setError] = useState('')
+  const [paymentStep, setPaymentStep] = useState('address') // 'address' or 'payment'
   // eslint-disable-next-line no-unused-vars
-  const [orderId, setOrderId] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [orderId, setOrderId] = useState(null)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const handleAddressSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!shippingAddress.trim()) {
-      setError('Please enter a valid shipping address');
-      return;
+      setError('Please enter a valid shipping address')
+      return
     }
-    
-    setIsProcessing(true);
+
+    setIsProcessing(true)
     try {
-      const apiUrl = import.meta.env.VITE_LOCAL_URL;
-      const response = await axios.put(`${apiUrl}/auth/update-shipping-address`, { 
-        shippingAddress 
-      }, {
-        withCredentials: true // Ensure cookies are sent with the request
-      });
-      
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.put(
+        `${apiUrl}/auth/update-shipping-address`,
+        {
+          shippingAddress,
+        },
+        {
+          withCredentials: true, // Ensure cookies are sent with the request
+        }
+      )
+
       if (response.data.success) {
-        setError('');
-        setPaymentStep('payment');
+        setError('')
+        setPaymentStep('payment')
       } else {
-        setError(response.data.message || 'Failed to update shipping address');
+        setError(response.data.message || 'Failed to update shipping address')
       }
     } catch (error) {
-      setError(error.response?.data?.message || "An error occurred. Please try again");
+      setError(
+        error.response?.data?.message || 'An error occurred. Please try again'
+      )
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   const createPayPalOrder = async () => {
-    setIsProcessing(true);
+    setIsProcessing(true)
     try {
-      const apiUrl = import.meta.env.VITE_LOCAL_URL;
-      const response = await axios.post(`${apiUrl}/checkout/create-paypal-order`, {
-        items: cart.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.productPrice,
-          quantity: item.quantity
-        })),
-        totalAmount: totalCart(),
-        shippingAddress
-      }, {
-        withCredentials: true
-      });
-      
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.post(
+        `${apiUrl}/checkout/create-paypal-order`,
+        {
+          items: cart.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.productPrice,
+            quantity: item.quantity,
+          })),
+          totalAmount: totalCart(),
+          shippingAddress,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+
       if (!response.data.orderID) {
-        throw new Error('No order ID received from server');
+        throw new Error('No order ID received from server')
       }
-      
-      setOrderId(response.data.orderID);
-      return response.data.orderID;
+
+      setOrderId(response.data.orderID)
+      return response.data.orderID
     } catch (error) {
-      setError(error.response?.data?.message || "Failed to create payment order");
-      throw error;
+      setError(
+        error.response?.data?.message || 'Failed to create payment order'
+      )
+      throw error
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   const onApprovePayment = async (data) => {
-    setIsProcessing(true);
+    setIsProcessing(true)
     try {
-      const apiUrl = import.meta.env.VITE_LOCAL_URL;
+      const apiUrl = import.meta.env.VITE_LIVE_URL
       const response = await axios.post(
         `${apiUrl}/checkout/capture-paypal-order/${data.orderID}`,
         {},
         { withCredentials: true }
-      );
-      
+      )
+
       if (response.data.success) {
         // Clear cart on successful payment
-        clearCart();
+        clearCart()
         // Redirect to success page with order details
-        window.location.href = `/order/success?order_id=${data.orderID}`;
+        window.location.href = `/order/success?order_id=${data.orderID}`
       } else {
-        setError(response.data.message || "Payment processing failed");
+        setError(response.data.message || 'Payment processing failed')
       }
     } catch (error) {
-      setError(error.response?.data?.message || "Payment processing failed");
-      console.error('Payment capture error:', error);
+      setError(error.response?.data?.message || 'Payment processing failed')
+      console.error('Payment capture error:', error)
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   return (
     <div className="page-container">
-      <div className='content-wrap'>
+      <div className="content-wrap">
         {paymentStep === 'address' ? (
           <div className="container1">
             <div className="row justify-content-center mt-5">
@@ -129,8 +142,8 @@ const CheckoutPage = () => {
                           placeholder="Enter full shipping address including street, city, state, and zip code"
                         />
                       </div>
-                      <button 
-                        type="submit" 
+                      <button
+                        type="submit"
                         className="btn btn-primary btn-block mt-3"
                         disabled={isProcessing}
                       >
@@ -179,7 +192,12 @@ const CheckoutPage = () => {
                                   type="number"
                                   className="form-control"
                                   value={item.quantity}
-                                  onChange={(e) => updateQuantity(item.id, parseInt(e.target.value))}
+                                  onChange={(e) =>
+                                    updateQuantity(
+                                      item.id,
+                                      parseInt(e.target.value)
+                                    )
+                                  }
                                   min="1"
                                 />
                               </td>
@@ -191,47 +209,49 @@ const CheckoutPage = () => {
                                   Remove
                                 </button>
                               </td>
-                              <td>${(item.productPrice * item.quantity)}</td>
+                              <td>${item.productPrice * item.quantity}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
-                      <div className="text-end h5">
-                        Total: ${totalCart()}
-                      </div>
+                      <div className="text-end h5">Total: ${totalCart()}</div>
                     </div>
 
                     <div className="payment-section">
                       <h5 className="mb-3">Select Payment Method</h5>
-                      <PayPalScriptProvider 
-                        options={{ 
-                          "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID,
-                          currency: "USD",
-                          "disable-funding": "credit,card" // Optional: customize funding options
+                      <PayPalScriptProvider
+                        options={{
+                          'client-id': import.meta.env.VITE_PAYPAL_CLIENT_ID,
+                          currency: 'USD',
+                          'disable-funding': 'credit,card', // Optional: customize funding options
                         }}
                       >
                         <PayPalButtons
-                          style={{ 
-                            layout: "vertical",
-                            color: "blue",
-                            shape: "rect",
-                            label: "paypal"
+                          style={{
+                            layout: 'vertical',
+                            color: 'blue',
+                            shape: 'rect',
+                            label: 'paypal',
                           }}
                           createOrder={createPayPalOrder}
                           onApprove={onApprovePayment}
                           onError={(err) => {
-                            console.error('PayPal error:', err);
-                            setError(`Payment error: ${err.message || 'Unable to process payment'}`);
+                            console.error('PayPal error:', err)
+                            setError(
+                              `Payment error: ${
+                                err.message || 'Unable to process payment'
+                              }`
+                            )
                           }}
                           onCancel={() => {
-                            setError('Payment was cancelled');
+                            setError('Payment was cancelled')
                           }}
                           disabled={isProcessing || cart.length === 0}
                         />
                       </PayPalScriptProvider>
                     </div>
 
-                    <button 
+                    <button
                       className="btn btn-secondary mt-3"
                       onClick={() => setPaymentStep('address')}
                       disabled={isProcessing}
@@ -262,21 +282,19 @@ const CheckoutPage = () => {
                           <td>{item.name}</td>
                           <td>${item.productPrice}</td>
                           <td>Qty: {item.quantity}</td>
-                          <td>${(item.productPrice * item.quantity)}</td>
+                          <td>${item.productPrice * item.quantity}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <div className="text-end h5">
-                    Total: ${totalCart()}
-                  </div>
+                  <div className="text-end h5">Total: ${totalCart()}</div>
                 </>
               )}
             </div>
           </div>
         </div>
       </div>
-      
+
       <div className="footer-container">
         <footer className="py-5 bg-dark">
           <div className="container">
@@ -287,7 +305,7 @@ const CheckoutPage = () => {
         </footer>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CheckoutPage;
+export default CheckoutPage

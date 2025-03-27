@@ -1,32 +1,39 @@
 import { useState } from 'react'
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
 import axios from 'axios'
 import './css/checkout.css'
 import { useCart } from '../../CartContext'
 
 const CheckoutPage = () => {
-  const { cart, removeFromCart, updateQuantity, totalCart } = useCart();
-  const [ shippingAddress, setShippingAddress ] = useState('');
-  const [ error, setError ] = useState('');
-  
+  const { cart, removeFromCart, updateQuantity, totalCart } = useCart()
+  const [shippingAddress, setShippingAddress] = useState('')
+  const [error, setError] = useState('')
+
   const checkout = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_LOCAL_URL
-      const response = await axios.put(`${apiUrl}/auth/update-shipping-address`, { shippingAddress });
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.put(
+        `${apiUrl}/auth/update-shipping-address`,
+        { shippingAddress }
+      )
       if (response.data.success) {
-        setError('');
-        alert(`Shipping address updated successfully. Proceding to payment gateway`);
+        setError('')
+        alert(
+          `Shipping address updated successfully. Proceding to payment gateway`
+        )
       } else {
-        setError(response.data.message);
+        setError(response.data.message)
       }
     } catch (error) {
-      setError(error.response?.data?.message || "An error occured. Please try again");
+      setError(
+        error.response?.data?.message || 'An error occured. Please try again'
+      )
     }
   }
 
   return (
     <div className="page-container">
-      <div className='content-wrap'>
+      <div className="content-wrap">
         <div className="container1">
           <div className="row justify-content-center mt-5">
             <div className="col-md-6">
@@ -35,12 +42,12 @@ const CheckoutPage = () => {
                   <h3>Shipping Details</h3>
                 </div>
                 {error && (
-              <p style={{ color: 'red', marginLeft: '300px' }}>{error}</p>
-            )}
+                  <p style={{ color: 'red', marginLeft: '300px' }}>{error}</p>
+                )}
                 <div className="card-body">
                   <form
-                    onSubmit={(e)=>{
-                      e.preventDefault();
+                    onSubmit={(e) => {
+                      e.preventDefault()
                       checkout()
                     }}
                   >

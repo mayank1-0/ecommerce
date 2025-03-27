@@ -3,24 +3,29 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 
 const ForgotPassword = () => {
-  const [ resetPasswordEmail, setResetPasswordEmail ] = useState('');
-  const [ error, setError] = useState('')
+  const [resetPasswordEmail, setResetPasswordEmail] = useState('')
+  const [error, setError] = useState('')
 
   const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+    e.preventDefault()
+    setError('')
     try {
       //const apiUrl = import.meta.env.VITE_LIVE_URL
-      const apiUrl = import.meta.env.VITE_LOCAL_URL
-      const response = await axios.post(`${apiUrl}/auth/send-reset-password-link`, {resetPasswordEmail});
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.post(
+        `${apiUrl}/auth/send-reset-password-link`,
+        { resetPasswordEmail }
+      )
       if (response.data.success) {
-        setError('');
-        alert(`Reset password link sent to your email. Kindly check`);
+        setError('')
+        alert(`Reset password link sent to your email. Kindly check`)
       } else {
-        setError(response.data.message);
+        setError(response.data.message)
       }
     } catch (error) {
-      setError(error.response?.data?.message || "An error occured. Please try again");
+      setError(
+        error.response?.data?.message || 'An error occured. Please try again'
+      )
     }
   }
 
@@ -32,7 +37,9 @@ const ForgotPassword = () => {
             <div className="card-header text-center">
               <h3>Forgot Password</h3>
             </div>
-            { error && <p style={{ color: 'red', marginLeft: '130px' }}>{error}</p> }
+            {error && (
+              <p style={{ color: 'red', marginLeft: '130px' }}>{error}</p>
+            )}
             <div className="card-body">
               <form onSubmit={handleFormSubmit}>
                 <div className="form-group">

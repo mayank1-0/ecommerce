@@ -1,29 +1,34 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { useNavigate, useParams } from 'react-router-dom' 
+import { useNavigate, useParams } from 'react-router-dom'
 
 const ResetPassword = () => {
-  const navigate = useNavigate();
-  const { token } = useParams();
-  const [ newPassword, setNewPassword ] = useState('');
-  const [ error, setError ] = useState('');
+  const navigate = useNavigate()
+  const { token } = useParams()
+  const [newPassword, setNewPassword] = useState('')
+  const [error, setError] = useState('')
 
-  async function handleFormSubmit (e) {
-    e.preventDefault();
-    setError('');
+  async function handleFormSubmit(e) {
+    e.preventDefault()
+    setError('')
     try {
       // const apiUrl = import.meta.env.VITE_LIVE_URL
-      const apiUrl = import.meta.env.VITE_LOCAL_URL
-      const response = await axios.put(`${apiUrl}/auth/reset-password`,{token, newPassword});
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.put(`${apiUrl}/auth/reset-password`, {
+        token,
+        newPassword,
+      })
       if (response.data.success) {
-        setError('');
+        setError('')
         alert('Password updated successfully')
-        navigate('/');    
+        navigate('/')
       } else {
         setError(response.data.message)
       }
     } catch (error) {
-       setError(error.response?.data?.message || "An error occured. Please try again")
+      setError(
+        error.response?.data?.message || 'An error occured. Please try again'
+      )
     }
   }
 
@@ -35,7 +40,9 @@ const ResetPassword = () => {
             <div className="card-header text-center">
               <h3>Reset Password</h3>
             </div>
-            { error && <p style={{ color:'red', marginLeft:'125px' }}>{error}</p>}
+            {error && (
+              <p style={{ color: 'red', marginLeft: '125px' }}>{error}</p>
+            )}
             <div className="card-body">
               <form onSubmit={handleFormSubmit}>
                 <div className="form-group">
@@ -61,4 +68,4 @@ const ResetPassword = () => {
   )
 }
 
-export default ResetPassword;
+export default ResetPassword

@@ -3,28 +3,34 @@ import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 
 const Signup = () => {
-  const navigate = useNavigate();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const navigate = useNavigate()
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
-  async function handleSubmit(e){
-    e.preventDefault();
-    setError('');
+  async function handleSubmit(e) {
+    e.preventDefault()
+    setError('')
     try {
       // const apiUrl = import.meta.env.VITE_LIVE_URL
-      const apiUrl = import.meta.env.VITE_LOCAL_URL
-      const response = await axios.post(`${apiUrl}/auth/signup`, {fullName, email, password})
+      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const response = await axios.post(`${apiUrl}/auth/signup`, {
+        fullName,
+        email,
+        password,
+      })
       if (response.data.success) {
-        setError('');
-        alert(`Signup successful`);
-        navigate('/');
+        setError('')
+        alert(`Signup successful`)
+        navigate('/')
       } else {
-        setError(response.data.message || 'Signup failed');
+        setError(response.data.message || 'Signup failed')
       }
     } catch (error) {
-      setError(error.response?.data?.message || 'An error occured. Please try again');
+      setError(
+        error.response?.data?.message || 'An error occured. Please try again'
+      )
     }
   }
 
@@ -36,13 +42,15 @@ const Signup = () => {
             <div className="card-header text-center">
               <h3>Signup</h3>
             </div>
-            {error && <p style={{ color: 'red', marginLeft: '200px' }}>{error}</p>}
+            {error && (
+              <p style={{ color: 'red', marginLeft: '200px' }}>{error}</p>
+            )}
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label for="name">Full Name</label>
                   <input
-                    onChange={(e)=>setFullName(e.target.value)}
+                    onChange={(e) => setFullName(e.target.value)}
                     type="text"
                     className="form-control"
                     id="name"
@@ -53,7 +61,7 @@ const Signup = () => {
                 <div className="form-group">
                   <label for="email">Email address</label>
                   <input
-                    onChange={(e)=>setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     className="form-control"
                     id="email"
@@ -65,7 +73,7 @@ const Signup = () => {
                 <div className="form-group">
                   <label for="password">Password</label>
                   <input
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     type="password"
                     className="form-control"
                     id="password"
@@ -81,7 +89,7 @@ const Signup = () => {
             <div className="card-footer text-center">
               <small>&copy; 2025 Your Company</small>
               <br />
-              <Link to="/" >Already have an account? Login Here</Link>
+              <Link to="/">Already have an account? Login Here</Link>
             </div>
           </div>
         </div>
