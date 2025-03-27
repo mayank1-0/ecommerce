@@ -18,7 +18,7 @@ app.use(
 
 app.use(
   cors({
-    origin: 'https://ecommerce-five-phi-40.vercel.app/', // Allow requests from this origin
+    origin: 'https://ecommerce-five-phi-40.vercel.app', // Allow requests from this origin
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
   })
