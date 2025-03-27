@@ -30,5 +30,6 @@ Basic E-Commerce web-app essential functionalities:
 
 PENDING:
    2.4 Modify Customer model for address field and create a updateShippingAddress API for the the loggedIn customer to add shippingAddress to database.
+   2.5 Integrate above with Frontend
 
    After this goto 4.2 Checkout Process starting from Payment Integration

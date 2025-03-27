@@ -4,7 +4,6 @@ require('dotenv').config()
 const auth = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1]
-    console.log(`11 ${token}`)
     if (req.session.user && req.session.token && req.session.token === token) {
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
       const tokenStatus = decodedToken.isActive

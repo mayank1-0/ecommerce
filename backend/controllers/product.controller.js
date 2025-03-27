@@ -1,4 +1,5 @@
 const Product = require('../models/Product.model');
+const { client } = require('../utils/paypal')
 
 const fetchAllProducts = async (req, res) => {
     try {
@@ -74,19 +75,4 @@ const fetchProducts = async (req, res) => {
     }
 }
 
-// For Context API
-const fetchDesiredProductsOrSingleProduct = async (req, res) => {
-    try {
-        let desired = req.params.desired;
-        if( !desired || desired === 'all'){
-            const products = await Product.find();
-            if( !products ) return res.status(404).send({success: false, message:`No products found in the database`})
-            return res.status(200).send({success: true, message:`Products fetched successfully`, products});
-        }
-
-    } catch (error) {
-        
-    }
-}
-
-module.exports = { fetchAllProducts, fetchProductsByCategory, fetchSelectedAndRelatedProducts, fetchProducts, fetchDesiredProductsOrSingleProduct }
+module.exports = { fetchAllProducts, fetchProductsByCategory, fetchSelectedAndRelatedProducts, fetchProducts }

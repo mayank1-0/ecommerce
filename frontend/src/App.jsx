@@ -9,6 +9,7 @@ import ProductHomePage from './components/Product/ProductHomePage'
 import ProductDetailsPage from './components/Product/ProductDetailsPage'
 // Checkout component
 import CheckoutPage from './components/Checkout/CheckoutPage'
+import Checkout1 from './components/Checkout1/Checkout1'
 import { CartProvider } from './CartContext'
 import { AuthProvider } from './AuthContext'
 
@@ -25,7 +26,7 @@ function App() {
                 path="/product-details-page/:productId"
                 element={<ProductDetailsPage />}
               />
-              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/checkout" element={<Checkout1 />} />
               {/* ------------------------------------ */}
               {/* Auth functionality */}
               <Route path="/login" element={<Login />} />

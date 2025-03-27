@@ -1,6 +1,7 @@
 const express = require('express')
 const auth = require('./routes/auth')
 const product = require('./routes/product')
+const checkout = require('./routes/checkout');
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const session = require('express-session');
@@ -26,6 +27,7 @@ app.use(express.static('public')) // This will make all files inside the public 
 app.use(cookieParser())
 app.use('/auth', auth)
 app.use('/product', product)
+app.use('/checkout', checkout)
 
 app.get('/', (req, res) => {
   res.send('App is running')

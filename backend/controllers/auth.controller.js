@@ -185,8 +185,8 @@ const updateShippingAddress = async (req, res) => {
       userId,
       { shippingAddress },
       { new: true }
-    )
-    if (update) return res.status(200).send({ success: true, message: `Shipping address for the loggedIn user updated successfully`, data: update })    
+    ).select('-password')
+    if (update) return res.status(200).send({ success: true, message: `Shipping address for the loggedIn user updated successfully`, data: update })        
     res.status(404).send({success: false, message: `No customer with the given id found in the database`});
   } catch (error) {
     res.status(500).send({success: false, message: "Something went wrong", error});
