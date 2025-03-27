@@ -42,8 +42,8 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.get(`${apiUrl}/auth/logout`) // Call the logout endpoint
       if (response.data.success) {
         setUser(null)
-        localStorage.removeItem("user") // Clear persisted user data
-        delete axios.defaults.headers.common['Authorization']
+        await localStorage.removeItem("user") // Clear persisted user data
+        await delete axios.defaults.headers.common['Authorization']
       } else {
         setError(response.data.message || 'Logout failed')
       }
