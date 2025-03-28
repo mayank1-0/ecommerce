@@ -46,14 +46,16 @@ const signup = async (req, res) => {
 }
 
 const login = async (req, res) => {
-  try {    
+  try {
     const { email, password } = req.body
     if (!email || !password)
       return res.status(400).send({
         success: false,
         message: 'Please enter both email and password',
       })
-    const customer = await Customer.findOne({ email }).select('fullName password');
+    const customer = await Customer.findOne({ email }).select(
+      'fullName password'
+    )
     if (!customer)
       return res
         .status(400)
@@ -66,18 +68,24 @@ const login = async (req, res) => {
     const jwtToken = await jwt.sign(
       {
         id: customer._id,
-        isActive: true
+        isActive: true,
       },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE }
     )
-    let sessionData = req.session;
-    sessionData.user = {};
-    sessionData.token = jwtToken;
-    sessionData.user.email = email;
-    sessionData.user.name = customer.fullName;
+    let sessionData = req.session
+    sessionData.user = {}
+    sessionData.token = jwtToken
+    sessionData.user.email = email
+    sessionData.user.name = customer.fullName
     res
-      .status(200).send({ success: true, message: 'Login successful', token: jwtToken, customerName: customer.fullName });
+      .status(200)
+      .send({
+        success: true,
+        message: 'Login successful',
+        token: jwtToken,
+        customerName: customer.fullName,
+      })
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -136,62 +144,105 @@ const resetPasswordLink = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const { token, newPassword } = req.body;
+    const { token, newPassword } = req.body
     if (!token || !newPassword)
+      return res.status(400).send({
+        success: false,
+        message: `Please enter both, token and new password`,
+      })
+    if (newPassword.length < 8)
       return res
         .status(400)
         .send({
           success: false,
-          message: `Please enter both, token and new password`,
-        });
-    if( newPassword.length < 8) return res.status(400).send({ success: false, message: `New password must be 8 or more characters long`});
-    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
-    const hashPassword = await bcrypt.hash(newPassword, saltRounds);
-    const customer = await Customer.findOneAndUpdate({
-      resetPasswordToken: hashedToken,
-      resetPasswordExpiry: { $gt: Date.now() },
-    },
-    {
-      password: hashPassword,
-      resetPasswordToken: undefined,
-      resetPasswordExpiry: undefined
-    },
-    { new: true }
-  );
-    if( !customer ) return res.status(401).send({ success: false, message: "Password reset token expired"});
-    res.status(200).send({success: true, message: 'Password reset successfully'});
+          message: `New password must be 8 or more characters long`,
+        })
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
+    const hashPassword = await bcrypt.hash(newPassword, saltRounds)
+    const customer = await Customer.findOneAndUpdate(
+      {
+        resetPasswordToken: hashedToken,
+        resetPasswordExpiry: { $gt: Date.now() },
+      },
+      {
+        password: hashPassword,
+        resetPasswordToken: undefined,
+        resetPasswordExpiry: undefined,
+      },
+      { new: true }
+    )
+    if (!customer)
+      return res
+        .status(401)
+        .send({ success: false, message: 'Password reset token expired' })
+    res
+      .status(200)
+      .send({ success: true, message: 'Password reset successfully' })
   } catch (error) {
-    res.status(500).send({ success: false, error: error.message, message: "Something went wrong"});
+    res
+      .status(500)
+      .send({
+        success: false,
+        error: error.message,
+        message: 'Something went wrong',
+      })
   }
 }
 
-const logout = async (req, res) => {  
+const logout = async (req, res) => {
   try {
-    let sessionData = req.session;
-    const logout = await sessionData.destroy();
-    res.status(200).send({success: true, message: `Logout successful`})
+    let sessionData = req.session
+    const logout = await sessionData.destroy()
+    // Additional headers to prevent caching
+    res.header('Cache-Control', 'no-store')
+    res.header('Pragma', 'no-cache')
+    res.status(200).send({ success: true, message: `Logout successful` })
   } catch (e) {
     res
       .status(500)
-      .send({ success: false, error: e, message: "Logout Failed. Please try again" });
+      .send({
+        success: false,
+        error: e,
+        message: 'Logout Failed. Please try again',
+      })
   }
 }
 
 const updateShippingAddress = async (req, res) => {
   try {
-    const { shippingAddress } = req.body;
-    const userId = req.id;
+    const { shippingAddress } = req.body
+    const userId = req.id
     const update = await Customer.findByIdAndUpdate(
       userId,
       { shippingAddress },
       { new: true }
     ).select('-password')
-    if (update) return res.status(200).send({ success: true, message: `Shipping address for the loggedIn user updated successfully`, data: update })        
-    res.status(404).send({success: false, message: `No customer with the given id found in the database`});
+    if (update)
+      return res
+        .status(200)
+        .send({
+          success: true,
+          message: `Shipping address for the loggedIn user updated successfully`,
+          data: update,
+        })
+    res
+      .status(404)
+      .send({
+        success: false,
+        message: `No customer with the given id found in the database`,
+      })
   } catch (error) {
-    res.status(500).send({success: false, message: "Something went wrong", error});
+    res
+      .status(500)
+      .send({ success: false, message: 'Something went wrong', error })
   }
 }
 
-
-module.exports = { login, signup, resetPasswordLink, resetPassword, updateShippingAddress, logout }
+module.exports = {
+  login,
+  signup,
+  resetPasswordLink,
+  resetPassword,
+  updateShippingAddress,
+  logout,
+}

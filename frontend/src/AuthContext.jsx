@@ -39,15 +39,17 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       const apiUrl = import.meta.env.VITE_LIVE_URL
-      const response = await axios.get(`${apiUrl}/auth/logout`) // Call the logout endpoint
-      if (response.data.success) {
-        setUser(null)
-        await localStorage.removeItem("user") // Clear persisted user data
-        await delete axios.defaults.headers.common['Authorization']
-      } else {
-        setError(response.data.message || 'Logout failed')
-      }
+      // eslint-disable-next-line no-unused-vars
+      const response = await axios.get(`${apiUrl}/auth/logout`, {
+        withCredentials: true, // Ensure credentials are sent
+      }) // Call the logout endpoint
+      setUser(null)
+      localStorage.removeItem('user') // Clear persisted user data
+      delete axios.defaults.headers.common['Authorization']
     } catch (error) {
+      setUser(null)
+      localStorage.removeItem('user')
+      delete axios.defaults.headers.common['Authorization']
       setError(
         error.response?.data?.message || 'An error occurred during logout'
       )
