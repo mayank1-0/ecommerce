@@ -13,8 +13,8 @@ Basic E-Commerce web-app essential functionalities:
    Update Cart: Allow customers to change quantities or remove items.
 4. Checkout Process
    Shipping Information: Users should be able to enter their shipping address.
-   Payment Integration: Basic integration with a payment gateway (e.g., Stripe, PayPal) for processing payments.
-   Order Confirmation: After payment, users should receive an order confirmation with order details.
+   Payment Integration: Basic integration with a payment gateway (e.g., Stripe, PayPal) for processing payments. BUGS
+   Order Confirmation: After payment, users should receive an order confirmation with order details. UNABLE TO TEST
 5. Order Management (for customers)
    Order History: Users should be able to view their previous orders and the status of current orders.
 ------------------------------------------------- Enough till this ---------------------------------------------------

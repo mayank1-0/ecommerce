@@ -121,7 +121,6 @@ const seedProductsAndDeleteCustomers = async () => {
     // Insert the sample products into the database
     await Product.insertMany(products)
 
-    console.log('Database seeded successfully with sample products!')
     mongoose.disconnect()
   } catch (error) {
     console.error('Error seeding database:', error)

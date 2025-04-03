@@ -45,4 +45,4 @@ orderSchema.pre('save', async function(next) {
   next();
 });
 
-module.exports = mongoose.model('Order', orderSchema)
+module.exports = mongoose.model('Order', orderSchema, 'Orders')

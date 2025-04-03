@@ -12,8 +12,8 @@ const ResetPassword = () => {
     e.preventDefault()
     setError('')
     try {
-      // const apiUrl = import.meta.env.VITE_LIVE_URL
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      // const apiUrl = import.meta.env.VITE_LOCAL_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.put(`${apiUrl}/auth/reset-password`, {
         token,
         newPassword,

@@ -7,7 +7,7 @@ import { useAuth } from '../../../AuthContext'
 
 const Navbar = () => {
   const { totalCount } = useCart()
-  const { logout } = useAuth()
+  const { user, logout } = useAuth()
 
   const [modalVisible, setModalVisible] = useState(false) // To control modal visibility
   const [dropdownVisible, setDropdownVisible] = useState(false) // To control dropdown visibility
@@ -23,11 +23,23 @@ const Navbar = () => {
   }
 
   // Toggle dropdown visibility
-  const toggleDropdown = () => {
+  const toggleDropdown = (e) => {
+    e.preventDefault()
     setDropdownVisible((prev) => !prev)
   }
 
-  const user = JSON.parse(localStorage.getItem('user'))
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+    ? JSON.parse(localStorage.getItem('currentUser'))
+    : []
+
+  const handleLogout = (e) => {
+    e.preventDefault()
+    logout()
+    setDropdownVisible(false)
+  }
+
+  // Check if user is logged in by comparing IDs or emails or customerNames or token
+  const isLoggedIn = user && currentUser && user.email === currentUser.email && user.customerName === currentUser.customerName && user.token === currentUser.token
 
   return (
     <div>
@@ -94,9 +106,10 @@ const Navbar = () => {
             </ul>
             <ul className="navbar-nav align-items-center ml-auto ml-md-0">
               <li className="nav-item dropdown show">
-                {user ? (
+                {isLoggedIn ? (
                   // When user is logged in - show dropdown toggle
                   <a
+                    href="#"
                     className="nav-link pr-0"
                     role="button"
                     onClick={toggleDropdown}
@@ -135,7 +148,7 @@ const Navbar = () => {
                 )}
 
                 {/* Dropdown menu - only shown when user is logged in */}
-                {user && (
+                {isLoggedIn && (
                   <div
                     className={`dropdown-menu dropdown-menu-right ${
                       dropdownVisible ? 'show' : ''
@@ -145,7 +158,7 @@ const Navbar = () => {
                       <h6 className="text-overflow m-0">Welcome!</h6>
                     </div>
                     <div className="dropdown-divider"></div>
-                    <a href="" onClick={logout} className="dropdown-item">
+                    <a href="#" onClick={handleLogout} className="dropdown-item">
                       <i className="ni ni-user-run"></i>
                       <span>Logout</span>
                     </a>

@@ -23,7 +23,7 @@ const CheckoutPage = () => {
 
     setIsProcessing(true)
     try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.put(
         `${apiUrl}/auth/update-shipping-address`,
         {
@@ -52,7 +52,7 @@ const CheckoutPage = () => {
   const createPayPalOrder = async () => {
     setIsProcessing(true)
     try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.post(
         `${apiUrl}/checkout/create-paypal-order`,
         {
@@ -89,7 +89,7 @@ const CheckoutPage = () => {
   const onApprovePayment = async (data) => {
     setIsProcessing(true)
     try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.post(
         `${apiUrl}/checkout/capture-paypal-order/${data.orderID}`,
         {},

@@ -10,8 +10,8 @@ const ForgotPassword = () => {
     e.preventDefault()
     setError('')
     try {
-      //const apiUrl = import.meta.env.VITE_LIVE_URL
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      //const apiUrl = import.meta.env.VITE_LOCAL_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.post(
         `${apiUrl}/auth/send-reset-password-link`,
         { resetPasswordEmail }

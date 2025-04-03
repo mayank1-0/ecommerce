@@ -10,20 +10,26 @@ const Modal = ({ isVisible, onClose }) => {
 
   const proceedToCheckout = () => {
     try {
-      const storedUserString = localStorage.getItem('user');
+      const storedUserString = localStorage.getItem('currentUser');
       const storedUser = storedUserString ? JSON.parse(storedUserString) : null;
+      const cartString = localStorage.getItem('cart');
+      const cart = cartString ? JSON.parse(cartString) : null;            
       if( user && storedUser && 
         user.customerName === storedUser.customerName &&
         user.email === storedUser.email &&
-        user.token === storedUser.token
+        user.token === storedUser.token &&
+        cart.length > 0
       )
       navigate('/checkout')
+      else if( cart.length === 0){
+        alert('Your cart is empty. Add items to it first')
+      }
       else{
         alert('Login first');
         navigate('/login');
       }
     } catch (error) {
-      console.log(`error ${JSON.stringify(error, null, 2)}`);
+      alert('An error occurred while processing your checkout. Please try again.');
     }
   }
 

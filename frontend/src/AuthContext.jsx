@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       const response = await axios.post(`${apiUrl}/auth/login`, {
         email,
         password,
@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         setUser({ customerName, email, token })
         setError('')
         localStorage.setItem(
-          'user',
+          'currentUser',
           JSON.stringify({ customerName, email, token })
         ) // Persist user data
       } else {
@@ -38,17 +38,17 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_LIVE_URL
+      const apiUrl = import.meta.env.VITE_LOCAL_URL
       // eslint-disable-next-line no-unused-vars
       const response = await axios.get(`${apiUrl}/auth/logout`, {
         withCredentials: true, // Ensure credentials are sent
       }) // Call the logout endpoint
       setUser(null)
-      localStorage.removeItem('user') // Clear persisted user data
+      localStorage.removeItem('currentUser') // Clear persisted user data
       delete axios.defaults.headers.common['Authorization']
     } catch (error) {
       setUser(null)
-      localStorage.removeItem('user')
+      localStorage.removeItem('currentUser')
       delete axios.defaults.headers.common['Authorization']
       setError(
         error.response?.data?.message || 'An error occurred during logout'
