@@ -66,11 +66,6 @@ const Navbar = () => {
                   Home
                 </HashLink>
               </li>
-              {/* <li className="nav-item">
-                <a className="nav-link" href="#!">
-                  About
-                </a>
-              </li> */}
               <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
@@ -96,11 +91,6 @@ const Navbar = () => {
                       Popular Items
                     </HashLink>
                   </li>
-                  {/* <li>
-                    <a className="dropdown-item" href="#!">
-                      New Arrivals
-                    </a>
-                  </li> */}
                 </ul>
               </li>
             </ul>
